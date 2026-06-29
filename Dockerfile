@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   clang-format \
   clangd \
   ca-certificates \
+  udev \
   && rm -rf /var/lib/apt/lists/*
 
 # Verify installations
@@ -26,6 +27,7 @@ RUN git --version && \
   gdb-multiarch --version && \
   clang-format --version && \
   clangd --version && \
+  udevadm --version && \
   update-ca-certificates
 
 # Set working directory

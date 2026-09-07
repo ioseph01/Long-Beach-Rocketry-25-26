@@ -70,7 +70,7 @@ void ChessManager::render_board()
             case ROOK:
                 board_str[j] = '\xE2';
                 board_str[j + 1] = '\x99';
-                board_str[j + 2] = '\x96';
+                board_str[j + 2] = '\x9D';
                 board_str[j + 3] = ' ';
                 j += 4;
                 break;

@@ -1,9 +1,39 @@
-#pragma once
 #include "chess_globals.h"
+#include <bit>
+
 namespace LBR
 {
 namespace Chess
 {
+
+uint16_t PIECE_TO_VAL(uint8_t pieceFlag)
+{
+    switch (pieceFlag)
+    {
+        case PAWN:
+            return PAWN_VALUE;
+        case KNIGHT:
+        case PROMOTE_KNIGHT_FLAG:
+            return KNIGHT_VALUE;
+        case BISHOP:
+        case PROMOTE_BISHOP_FLAG:
+            return BISHOP_VALUE;
+        case ROOK:
+        case PROMOTE_ROOK_FLAG:
+            return ROOK_VALUE;
+        case QUEEN:
+        case PROMOTE_QUEEN_FLAG:
+            return QUEEN_VALUE;
+        case KING:
+            return KING_VALUE;
+    }
+    return 0;
+}
+
+uint16_t PROMOTION_VAL(uint8_t piece)
+{
+    return piece == KNIGHT ? 2 * PIECE_TO_VAL(piece) : PIECE_TO_VAL(piece);
+}
 
 uint64_t get_current_rank(uint64_t square)
 {
@@ -132,6 +162,93 @@ ChessMove decode_move(uint32_t move)
         .end_offset = static_cast<uint8_t>(0b111111 & (move >> 13)),
         .flags = static_cast<uint8_t>(0b1111 & (move >> 19)),
     };
+}
+
+uint32_t encode_log_entry(uint32_t move, bool w_king_castle,
+                          bool w_queen_castle, bool b_king_castle,
+                          bool b_queen_castle)
+{
+    return (static_cast<uint32_t>(w_king_castle) << 26) |
+           (static_cast<uint32_t>(w_queen_castle) << 25) |
+           (static_cast<uint32_t>(b_king_castle) << 24) |
+           (static_cast<uint32_t>(b_queen_castle) << 23) | move;
+}
+
+ChessEntry decode_log_entry(uint32_t encoded_entry)
+{
+    return ChessEntry{
+        .encoded_move = encoded_entry & 0x7FFFFF,
+        .w_king_castle = static_cast<bool>(encoded_entry & (1U << 26)),
+        .w_queen_castle = static_cast<bool>(encoded_entry & (1U << 25)),
+        .b_king_castle = static_cast<bool>(encoded_entry & (1U << 24)),
+        .b_queen_castle = static_cast<bool>(encoded_entry & (1U << 23))};
+}
+
+void extract_offsets(uint64_t bitboard)
+{
+    while (bitboard)
+    {
+        extracted_offsets_stack.push(
+            static_cast<uint8_t>(std::countr_zero(bitboard)));
+        bitboard &= bitboard - 1;
+    }
+}
+
+uint16_t evaluate_move(uint32_t encoded_move, uint16_t mat, int8_t depth = -1)
+{
+    ChessMove move = decode_move(encoded_move);
+    uint16_t score{0};
+
+    /* Handle PST */
+
+    if (move.color == BLACK_FLAG)
+    {
+        move.start_offset ^= 56;
+        move.end_offset ^= 56;
+    }
+    // switch (move.piece)
+    // {
+    //     case PAWN:
+    //         /* code */
+    //         break;
+
+    //     default:
+    //         break;
+    // }
+
+    /* Handle flags */
+    if (move.captured_piece != 0 && move.is_promotion())
+    {
+        return score + CAPTURE_VALUE + 10 * PIECE_TO_VAL(move.captured_piece) -
+               PIECE_TO_VAL(move.piece) + PROMOTION_VAL(move.flags);
+    }
+    else if (move.is_promotion())
+    {
+        return score + PROMOTION_VAL(move.flags);
+    }
+    else if (move.captured_piece)
+    {
+        return score + CAPTURE_VALUE + 10 * PIECE_TO_VAL(move.captured_piece) -
+               PIECE_TO_VAL(move.piece);
+    }
+    else if (move.flags == CASTLE_KINGSIDE_FLAG ||
+             move.flags == CASTLE_QUEENSIDE_FLAG)
+    {
+        return CASTLE_VALUE + score;
+    }
+
+    if (depth >= 0)
+    {
+        if (encoded_move == KILLER_MOVES[depth][0])
+        {
+            return KILLER_VALUE_1 + score;
+        }
+        else if (encoded_move == KILLER_MOVES[depth][1])
+        {
+            return KILLER_VALUE_2 + score;
+        }
+    }
+    return score;
 }
 
 }  // namespace Chess

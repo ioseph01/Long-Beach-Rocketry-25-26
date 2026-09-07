@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 #include "chess_move_struct.h"
+#include "pair.h"
+#include "stack.h"
 
 namespace LBR
 {
@@ -204,7 +206,15 @@ constexpr int8_t BLACK = -1;
 constexpr uint8_t WHITE_FLAG = 0;
 constexpr uint8_t BLACK_FLAG = 1;
 
-uint8_t MAX_DEPTH = 10;
+constexpr uint8_t MAX_DEPTH = 10;
+
+Stack<uint32_t, 128> encoded_moves_stack;
+std::array<Pair<uint32_t>, MAX_DEPTH> KILLER_MOVES;
+Stack<uint64_t, 256> history_stack;
+Stack<uint8_t, 64> extracted_offsets_stack;
+
+uint16_t PIECE_TO_VAL(uint8_t piece);
+uint16_t PROMOTION_VAL(uint8_t piece);
 
 uint64_t get_current_rank(uint64_t square);
 uint64_t get_current_file(uint64_t square);
@@ -215,6 +225,16 @@ uint32_t encode_move(uint8_t color, uint8_t piece, uint8_t start_offset,
                      uint8_t captured_piece, uint8_t end_offset,
                      uint8_t misc_flags);
 ChessMove decode_move(uint32_t move);
+
+uint32_t encode_log_entry(uint32_t move, bool w_king_castle,
+                          bool w_queen_castle, bool b_king_castle,
+                          bool b_queen_castle);
+
+ChessEntry decode_log_entry(uint32_t encoded_entry);
+
+void extract_offsets(uint64_t bitboard);
+
+uint16_t evaluate_move(uint32_t encoded_move, uint16_t mat, int8_t depth = -1);
 
 }  // namespace Chess
 }  // namespace LBR

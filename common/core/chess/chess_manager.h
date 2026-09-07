@@ -17,11 +17,15 @@ namespace Chess
 class ChessManager
 {
 public:
-    bool init();
+    ChessManager();
+
+    bool process_input(const char* input);
 
     void render_board();
 
     std::span<const uint8_t> board_data() const;
+
+    int8_t turn;
 
 private:
     char board_str[64 * 4 + 6 * 8]{'a', ' ', 'b', ' ', 'c', ' ', 'd',  ' ', 'e',

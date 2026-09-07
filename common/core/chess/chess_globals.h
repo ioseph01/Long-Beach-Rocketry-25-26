@@ -209,6 +209,7 @@ constexpr uint8_t BLACK_FLAG = 1;
 constexpr uint8_t MAX_DEPTH = 10;
 
 extern Stack<uint32_t, 128> encoded_moves_stack;
+extern Stack<uint32_t, 128> move_options;
 extern std::array<Pair<uint32_t>, MAX_DEPTH> KILLER_MOVES;
 extern Stack<uint64_t, 256> history_stack;
 extern Stack<uint8_t, 64> extracted_offsets_stack;

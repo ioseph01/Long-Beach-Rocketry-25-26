@@ -4,9 +4,52 @@ namespace LBR
 {
 namespace Chess
 {
-bool ChessManager::init()
+ChessManager::ChessManager() : turn(1), board(ChessBoard(*this))
 {
-    board = ChessBoard();
+}
+
+bool ChessManager::process_input(const char* input)
+{
+    char r1 = input[0];
+    char f1 = input[1];
+    if (!(f1 >= 'A' && f1 <= 'H') && !(f1 >= 'a' && f1 <= 'h'))
+    {
+        return false;
+    }
+    if (!(r1 >= '1' && r1 <= '8'))
+    {
+        return false;
+    }
+    char r2 = input[2];
+    char f2 = input[3];
+    if (!(f2 >= 'A' && f2 <= 'H') && !(f2 >= 'a' && f2 <= 'h'))
+    {
+        return false;
+    }
+    if (!(r2 >= '1' && r2 <= '8'))
+    {
+        return false;
+    }
+
+    switch (input[4])
+    {
+        case ' ':
+            break;
+        case 'Q':
+        case 'q':
+            break;
+        case 'N':
+        case 'n':
+            break;
+        case 'R':
+        case 'r':
+            break;
+        case 'B':
+        case 'b':
+            break;
+        default:
+            return false;
+    }
     return true;
 }
 
@@ -70,14 +113,14 @@ void ChessManager::render_board()
             case ROOK:
                 board_str[j] = '\xE2';
                 board_str[j + 1] = '\x99';
-                board_str[j + 2] = '\x9D';
+                board_str[j + 2] = '\x96';
                 board_str[j + 3] = ' ';
                 j += 4;
                 break;
             case -ROOK:
                 board_str[j] = '\xE2';
                 board_str[j + 1] = '\x99';
-                board_str[j + 2] = '\x9D';
+                board_str[j + 2] = '\x9C';
                 board_str[j + 3] = ' ';
                 j += 4;
                 break;

@@ -3,7 +3,7 @@
 
 using namespace LBR;
 
-Chess::ChessManager manager{};
+Chess::ChessManager manager;
 uint8_t rxb;
 std::array<uint8_t, 17> txb{"i <3 embedded\r\n"};
 
@@ -12,7 +12,6 @@ int main(int argc, char** argv)
     bsp_init();
 
     Board hw = get_board();
-    manager.init();
     manager.render_board();
 
     while (1)

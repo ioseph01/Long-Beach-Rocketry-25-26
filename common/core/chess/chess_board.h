@@ -8,9 +8,13 @@ namespace LBR
 namespace Chess
 {
 
+class ChessManager;
+
 class ChessBoard
 {
 public:
+    ChessBoard(ChessManager& manager_);
+
     uint64_t white_pieces() const;
     uint64_t black_pieces() const;
 
@@ -20,7 +24,8 @@ public:
 
     int16_t evaluate() const;
 
-private:
+    int8_t turn() const;
+
     /**
     * @brief Piece bitboards
     */
@@ -36,6 +41,8 @@ private:
     uint64_t b_queens{D8};
     uint64_t w_king{E1};
     uint64_t b_king{E8};
+
+    ChessManager& manager;
 };
 }  // namespace Chess
 }  // namespace LBR

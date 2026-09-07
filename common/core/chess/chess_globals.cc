@@ -292,27 +292,35 @@ uint8_t uci_to_offset(char* in)
     switch (in[0])
     {
         case 'A':
+        case 'a':
             file = A_FILE;
             break;
         case 'B':
+        case 'b':
             file = B_FILE;
             break;
         case 'C':
+        case 'c':
             file = C_FILE;
             break;
         case 'D':
+        case 'd':
             file = D_FILE;
             break;
         case 'E':
+        case 'e':
             file = E_FILE;
             break;
         case 'F':
+        case 'f':
             file = F_FILE;
             break;
         case 'G':
+        case 'g':
             file = G_FILE;
             break;
         case 'H':
+        case 'h':
             file = H_FILE;
             break;
     }

@@ -1,9 +1,14 @@
 #include "chess_board.h"
+#include "chess_manager.h"
 
 namespace LBR
 {
 namespace Chess
 {
+
+ChessBoard::ChessBoard(ChessManager& manager_) : manager{manager_}
+{
+}
 
 uint64_t ChessBoard::white_pieces() const
 {
@@ -100,6 +105,11 @@ int16_t ChessBoard::evaluate() const
         }
     }
     return score;
+}
+
+int8_t ChessBoard::turn() const
+{
+    return manager.turn;
 }
 
 }  // namespace Chess

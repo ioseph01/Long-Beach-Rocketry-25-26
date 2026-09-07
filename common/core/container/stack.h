@@ -63,9 +63,26 @@ public:
         return std::array<T, N>::operator[](index);
     }
 
-    const T& operator[](size_t index)
+    const T& operator[](size_t index) const
     {
         return std::array<T, N>::operator[](index);
+    }
+
+    int find(const T& val) const
+    {
+        for (int i = 0; i < count; i++)
+        {
+            if ((*this)[i] == val)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    bool contains(const T& val) const
+    {
+        return find(val) != -1;
     }
 
 private:

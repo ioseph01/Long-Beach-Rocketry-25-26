@@ -208,10 +208,10 @@ constexpr uint8_t BLACK_FLAG = 1;
 
 constexpr uint8_t MAX_DEPTH = 10;
 
-Stack<uint32_t, 128> encoded_moves_stack;
-std::array<Pair<uint32_t>, MAX_DEPTH> KILLER_MOVES;
-Stack<uint64_t, 256> history_stack;
-Stack<uint8_t, 64> extracted_offsets_stack;
+extern Stack<uint32_t, 128> encoded_moves_stack;
+extern std::array<Pair<uint32_t>, MAX_DEPTH> KILLER_MOVES;
+extern Stack<uint64_t, 256> history_stack;
+extern Stack<uint8_t, 64> extracted_offsets_stack;
 
 uint16_t PIECE_TO_VAL(uint8_t piece);
 uint16_t PROMOTION_VAL(uint8_t piece);
@@ -232,9 +232,13 @@ uint32_t encode_log_entry(uint32_t move, bool w_king_castle,
 
 ChessEntry decode_log_entry(uint32_t encoded_entry);
 
-void extract_offsets(uint64_t bitboard);
+uint8_t extract_offsets(uint64_t bitboard);
 
 uint16_t evaluate_move(uint32_t encoded_move, uint16_t mat, int8_t depth = -1);
+
+void move_to_uci(uint32_t move, char* out);
+uint8_t uci_to_offset(char* in);
+void offset_to_uci(uint8_t offset, char* out);
 
 }  // namespace Chess
 }  // namespace LBR

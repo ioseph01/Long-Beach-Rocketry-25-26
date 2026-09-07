@@ -6,6 +6,11 @@ namespace LBR
 namespace Chess
 {
 
+Stack<uint32_t, 128> encoded_moves_stack;
+std::array<Pair<uint32_t>, MAX_DEPTH> KILLER_MOVES;
+Stack<uint64_t, 256> history_stack;
+Stack<uint8_t, 64> extracted_offsets_stack;
+
 uint16_t PIECE_TO_VAL(uint8_t pieceFlag)
 {
     switch (pieceFlag)
@@ -184,17 +189,20 @@ ChessEntry decode_log_entry(uint32_t encoded_entry)
         .b_queen_castle = static_cast<bool>(encoded_entry & (1U << 23))};
 }
 
-void extract_offsets(uint64_t bitboard)
+uint8_t extract_offsets(uint64_t bitboard)
 {
+    uint8_t ret{0};
     while (bitboard)
     {
         extracted_offsets_stack.push(
             static_cast<uint8_t>(std::countr_zero(bitboard)));
+        ++ret;
         bitboard &= bitboard - 1;
     }
+    return ret;
 }
 
-uint16_t evaluate_move(uint32_t encoded_move, uint16_t mat, int8_t depth = -1)
+uint16_t evaluate_move(uint32_t encoded_move, uint16_t mat, int8_t depth)
 {
     ChessMove move = decode_move(encoded_move);
     uint16_t score{0};
@@ -249,6 +257,163 @@ uint16_t evaluate_move(uint32_t encoded_move, uint16_t mat, int8_t depth = -1)
         }
     }
     return score;
+}
+
+void move_to_uci(uint32_t move, char* out)
+{
+    ChessMove decoded_move = decode_move(move);
+    offset_to_uci(decoded_move.start_offset, out);
+    offset_to_uci(decoded_move.end_offset, out + 2);
+
+    switch (decoded_move.flags)
+    {
+        case PROMOTE_QUEEN_FLAG:
+            out[4] = 'Q';
+            return;
+        case PROMOTE_KNIGHT_FLAG:
+            out[4] = 'N';
+            return;
+        case PROMOTE_ROOK_FLAG:
+            out[4] = 'R';
+            return;
+        case PROMOTE_BISHOP_FLAG:
+            out[4] = 'B';
+            return;
+        default:
+            out[4] = ' ';
+    }
+}
+
+uint8_t uci_to_offset(char* in)
+{
+    uint64_t rank{RANK1};
+    uint64_t file{A_FILE};
+
+    switch (in[0])
+    {
+        case 'A':
+            file = A_FILE;
+            break;
+        case 'B':
+            file = B_FILE;
+            break;
+        case 'C':
+            file = C_FILE;
+            break;
+        case 'D':
+            file = D_FILE;
+            break;
+        case 'E':
+            file = E_FILE;
+            break;
+        case 'F':
+            file = F_FILE;
+            break;
+        case 'G':
+            file = G_FILE;
+            break;
+        case 'H':
+            file = H_FILE;
+            break;
+    }
+
+    switch (in[1])
+    {
+        case '1':
+            rank = RANK1;
+            break;
+        case '2':
+            rank = RANK2;
+            break;
+        case '3':
+            rank = RANK3;
+            break;
+        case '4':
+            file = RANK4;
+            break;
+        case '5':
+            file = RANK5;
+            break;
+        case '6':
+            file = RANK6;
+            break;
+        case '7':
+            file = RANK7;
+            break;
+        case '8':
+            file = RANK8;
+            break;
+    }
+    return std::countr_zero(rank & file);
+}
+
+void offset_to_uci(uint8_t offset, char* out)
+{
+    uint64_t square = 1ULL << offset;
+    if (square & A_FILE)
+    {
+        out[0] = 'A';
+    }
+    else if (square & B_FILE)
+    {
+        out[0] = 'B';
+    }
+    else if (square & C_FILE)
+    {
+        out[0] = 'C';
+    }
+    else if (square & D_FILE)
+    {
+        out[0] = 'D';
+    }
+    else if (square & E_FILE)
+    {
+        out[0] = 'E';
+    }
+    else if (square & F_FILE)
+    {
+        out[0] = 'F';
+    }
+    else if (square & G_FILE)
+    {
+        out[0] = 'G';
+    }
+    else if (square & H_FILE)
+    {
+        out[0] = 'H';
+    }
+    if (square & RANK1)
+    {
+        out[1] = '1';
+    }
+    else if (square & RANK2)
+    {
+        out[1] = '2';
+    }
+    else if (square & RANK3)
+    {
+        out[1] = '3';
+    }
+    else if (square & RANK4)
+    {
+        out[1] = '4';
+    }
+    else if (square & RANK5)
+    {
+        out[1] = '5';
+    }
+    else if (square & RANK6)
+    {
+        out[1] = '6';
+    }
+    else if (square & RANK7)
+    {
+        out[1] = '7';
+    }
+    else if (square & RANK8)
+    {
+        out[1] = '8';
+    }
 }
 
 }  // namespace Chess

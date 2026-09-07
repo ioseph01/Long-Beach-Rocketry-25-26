@@ -12,13 +12,13 @@ class Stack : private std::array<T, N>
 public:
     Stack() = default;
 
-    bool push(T tx)
+    bool push(const T& tx)
     {
         if (full())
         {
             return false;
         }
-        (*this)[count] = tx;
+        std::array<T, N>::operator[](count) = tx;
         count++;
         return true;
     }
@@ -29,14 +29,13 @@ public:
         {
             return false;
         }
-        rx = (*this)[--count];
+        rx = std::array<T, N>::operator[](--count);
         return true;
     }
 
-    bool reset()
+    void reset()
     {
         count = 0;
-        head = 0;
     }
 
     bool empty() const
@@ -57,6 +56,16 @@ public:
     size_t capacity() const
     {
         return N;
+    }
+
+    T& operator[](size_t index)
+    {
+        return std::array<T, N>::operator[](index);
+    }
+
+    const T& operator[](size_t index)
+    {
+        return std::array<T, N>::operator[](index);
     }
 
 private:

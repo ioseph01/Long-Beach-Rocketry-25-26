@@ -54,7 +54,7 @@ bool ChessManager::process_input(const char* input)
     return true;
 }
 
-void ChessManager::render_board()
+void ChessManager::render_board(void)
 {
     int j{18};
     for (int i = 0; i < 64; i++)
@@ -170,7 +170,7 @@ void ChessManager::render_board()
     }
 }
 
-std::span<const uint8_t> ChessManager::board_data() const
+std::span<const uint8_t> ChessManager::board_data(void) const
 {
     return {reinterpret_cast<const uint8_t*>(board_str), sizeof(board_str)};
 }

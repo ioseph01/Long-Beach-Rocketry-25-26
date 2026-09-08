@@ -9,6 +9,10 @@ namespace Chess
 constexpr uint64_t CLEAR_BITMASK = 0x0000000000000000;
 constexpr uint64_t SET_BITMASK = 0xFFFFFFFFFFFFFFFF;
 
+/**
+ * @brief Offsets of the board
+ */
+
 constexpr uint8_t A1_OFFSET = 0;
 constexpr uint8_t B1_OFFSET = 1;
 constexpr uint8_t C1_OFFSET = 2;
@@ -73,6 +77,10 @@ constexpr uint8_t E8_OFFSET = 60;
 constexpr uint8_t F8_OFFSET = 61;
 constexpr uint8_t G8_OFFSET = 62;
 constexpr uint8_t H8_OFFSET = 63;
+
+/**
+ * @brief Bitboards for board squares
+ */
 
 constexpr uint64_t A1 = 1ULL << A1_OFFSET;
 constexpr uint64_t A2 = 1ULL << A2_OFFSET;
@@ -139,6 +147,10 @@ constexpr uint64_t H6 = 1ULL << H6_OFFSET;
 constexpr uint64_t H7 = 1ULL << H7_OFFSET;
 constexpr uint64_t H8 = 1ULL << H8_OFFSET;
 
+/**
+ * @brief Bitboards for files
+ */
+
 constexpr uint64_t A_FILE = A1 | A2 | A3 | A4 | A5 | A6 | A7 | A8;
 constexpr uint64_t B_FILE = B1 | B2 | B3 | B4 | B5 | B6 | B7 | B8;
 constexpr uint64_t C_FILE = C1 | C2 | C3 | C4 | C5 | C6 | C7 | C8;
@@ -148,6 +160,10 @@ constexpr uint64_t F_FILE = F1 | F2 | F3 | F4 | F5 | F6 | F7 | F8;
 constexpr uint64_t G_FILE = G1 | G2 | G3 | G4 | G5 | G6 | G7 | G8;
 constexpr uint64_t H_FILE = H1 | H2 | H3 | H4 | H5 | H6 | H7 | H8;
 
+/**
+ * @brief Bitboards for ranks
+ */
+
 constexpr uint64_t RANK1 = A1 | B1 | C1 | D1 | E1 | F1 | G1 | H1;
 constexpr uint64_t RANK2 = A2 | B2 | C2 | D2 | E2 | F2 | G2 | H2;
 constexpr uint64_t RANK3 = A3 | B3 | C3 | D3 | E3 | F3 | G3 | H3;
@@ -156,6 +172,10 @@ constexpr uint64_t RANK5 = A5 | B5 | C5 | D5 | E5 | F5 | G5 | H5;
 constexpr uint64_t RANK6 = A6 | B6 | C6 | D6 | E6 | F6 | G6 | H6;
 constexpr uint64_t RANK7 = A7 | B7 | C7 | D7 | E7 | F7 | G7 | H7;
 constexpr uint64_t RANK8 = A8 | B8 | C8 | D8 | E8 | F8 | G8 | H8;
+
+/**
+ * @brief Bitboard for castling
+ */
 
 constexpr uint64_t W_KINGSIDE_PATH = F1 | G1;
 constexpr uint64_t W_KINGSIDE_ROOK_POS = F1;
@@ -171,12 +191,20 @@ constexpr uint64_t B_QUEENSIDE_PATH = D8 | C8 | B8;
 constexpr uint64_t B_QUEENSIDE_ROOK_POS = D8;
 constexpr uint64_t B_QUEENSIDE_KING_POS = C8;
 
+/**
+ * @brief Representation of certain pieces
+ */
+
 constexpr uint8_t PAWN = 1;
 constexpr uint8_t KNIGHT = 2;
 constexpr uint8_t BISHOP = 3;
 constexpr uint8_t ROOK = 5;
 constexpr uint8_t QUEEN = 6;
 constexpr uint8_t KING = 7;
+
+/**
+ * @brief Values of certain pieces
+ */
 
 constexpr uint16_t PAWN_VALUE = 100;
 constexpr uint16_t KNIGHT_VALUE = 310;
@@ -185,11 +213,19 @@ constexpr uint16_t ROOK_VALUE = 500;
 constexpr uint16_t QUEEN_VALUE = 900;
 constexpr uint16_t KING_VALUE = 0;
 
+/**
+ * @brief Values of certain moves
+ */
+
 constexpr uint16_t CASTLE_VALUE = 200;
 constexpr uint16_t CAPTURE_VALUE = 5000;
 constexpr uint16_t CHECKMATE_VALUE = 20000;
 constexpr uint16_t KILLER_VALUE_1 = 500;
 constexpr uint16_t KILLER_VALUE_2 = 600;
+
+/**
+ * @brief Offsets for the movement of certain pieces
+ */
 
 constexpr int8_t ROOK_DIRECTIONS[] = {-8, -1, 1, 8};
 constexpr int8_t BISHOP_DIRECTIONS[] = {-9, -7, 7, 9};
@@ -197,8 +233,16 @@ constexpr int8_t BISHOP_DIRECTIONS[] = {-9, -7, 7, 9};
 constexpr uint16_t TOTAL_NONPAWN_VALUE =
     2 * (PAWN_VALUE + KNIGHT_VALUE + BISHOP_VALUE + ROOK_VALUE + QUEEN_VALUE);
 
+/**
+ * @brief Color flags
+ */
+
 constexpr int8_t WHITE = 1;
 constexpr int8_t BLACK = -1;
+
+/**
+ * @brief Color flags for encoded moves
+ */
 
 constexpr uint8_t WHITE_FLAG = 0;
 constexpr uint8_t BLACK_FLAG = 1;

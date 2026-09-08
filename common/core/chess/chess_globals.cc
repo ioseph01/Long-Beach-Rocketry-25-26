@@ -7,9 +7,9 @@ namespace Chess
 {
 
 Stack<uint32_t, 128> encoded_moves_stack;
-std::array<Pair<uint32_t>, MAX_DEPTH> KILLER_MOVES;
+std::array<Pair<int16_t>, MAX_DEPTH> KILLER_MOVES;
 Stack<uint64_t, 256> history_stack;
-Stack<uint8_t, 64> extracted_offsets_stack;
+Stack<uint8_t, 128> extracted_offsets_stack;
 
 uint16_t PIECE_TO_VAL(uint8_t pieceFlag)
 {
@@ -202,10 +202,10 @@ uint8_t extract_offsets(uint64_t bitboard)
     return ret;
 }
 
-uint16_t evaluate_move(uint32_t encoded_move, uint16_t mat, int8_t depth)
+int16_t evaluate_move(uint32_t encoded_move, uint16_t mat, int8_t depth)
 {
     ChessMove move = decode_move(encoded_move);
-    uint16_t score{0};
+    int16_t score{0};
 
     /* Handle PST */
 

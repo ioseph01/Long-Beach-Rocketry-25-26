@@ -19,12 +19,27 @@ class ChessManager
 public:
     ChessManager();
 
+    /**
+     * @brief Handles input from the player
+     * @param input A 5 char string that will be analyzed
+     * 
+     * @return true if successful, false otherwise
+     */
     bool process_input(const char* input);
 
-    void render_board();
+    /**
+     * @brief Mutates the board string to represent the current position
+     */
+    void render_board(void);
 
-    std::span<const uint8_t> board_data() const;
+    /**
+     * @brief Converts the board string to a span to output in uart
+     */
+    std::span<const uint8_t> board_data(void) const;
 
+    /**
+     * @brief The current side to move
+     */
     int8_t turn;
 
 private:

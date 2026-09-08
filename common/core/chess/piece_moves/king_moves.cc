@@ -6,7 +6,7 @@ namespace LBR
 namespace Chess
 {
 
-uint64_t king_destinations(ChessBoard& board, int8_t color, int8_t offset)
+uint64_t king_destinations(ChessBoard& board, int8_t color, uint8_t offset)
 {
     uint64_t occupied = board.black_pieces() | board.white_pieces();
     uint64_t destinations = KING_ATTACKS[offset];
@@ -57,7 +57,7 @@ uint64_t king_destinations(ChessBoard& board, int8_t color, int8_t offset)
     }
     return destinations & ~friendlies;
 }
-uint8_t king_moves(ChessBoard& board, int8_t color, int8_t offset)
+uint8_t king_moves(ChessBoard& board, int8_t color, uint8_t offset)
 {
     uint8_t ret{0};
     uint64_t destinations = king_destinations(board, color, offset);

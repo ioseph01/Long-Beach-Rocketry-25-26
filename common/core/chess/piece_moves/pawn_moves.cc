@@ -50,7 +50,6 @@ uint8_t process_pawn_moves(ChessBoard& board, uint8_t color,
     uint8_t ret{0};
     while (destinations)
     {
-        ++ret;
         uint8_t target = std::countr_zero(destinations) - 1;
         uint8_t start = target - shift;
         ChessMove move;
@@ -71,6 +70,7 @@ uint8_t process_pawn_moves(ChessBoard& board, uint8_t color,
         }
         if ((1ULL << target) & (RANK1 | RANK8))
         {
+            ret += 4;
             encoded_moves_stack.push(encode_move(color, PAWN, start,
                                                  move.captured_piece, target,
                                                  PROMOTE_QUEEN_FLAG));
@@ -86,6 +86,7 @@ uint8_t process_pawn_moves(ChessBoard& board, uint8_t color,
         }
         else
         {
+            ++ret;
             encoded_moves_stack.push(encode_move(
                 color, PAWN, start, move.captured_piece, target, move.flags));
         }

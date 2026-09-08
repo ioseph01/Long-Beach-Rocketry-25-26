@@ -19,7 +19,7 @@ uint8_t knight_moves(ChessBoard& board, int8_t color, uint8_t offset)
     uint8_t color_flag = color > 0 ? WHITE_FLAG : BLACK_FLAG;
     uint64_t enemies = color > 0 ? board.black_pieces() : board.white_pieces();
     uint8_t len = extract_offsets(destinations);
-    while (len)
+    while (len--)
     {
         uint8_t end_offset;
         extracted_offsets_stack.pop(end_offset);
@@ -29,7 +29,6 @@ uint8_t knight_moves(ChessBoard& board, int8_t color, uint8_t offset)
                                              piece >= 0 ? piece : -piece,
                                              end_offset, 0));
 
-        --len;
         ++ret;
     }
     return ret;

@@ -64,7 +64,7 @@ uint8_t king_moves(ChessBoard& board, int8_t color, int8_t offset)
     int8_t color_flag = color > 0 ? WHITE_FLAG : BLACK_FLAG;
     uint64_t enemies = color > 0 ? board.black_pieces() : board.white_pieces();
     uint8_t len = extract_offsets(destinations);
-    while (len)
+    while (len--)
     {
         uint8_t destination;
         extracted_offsets_stack.pop(destination);
@@ -85,7 +85,6 @@ uint8_t king_moves(ChessBoard& board, int8_t color, int8_t offset)
         encoded_moves_stack.push(encode_move(
             color_flag, KING, offset, captured_piece, destination, flag));
 
-        --len;
         ++ret;
     }
     return ret;

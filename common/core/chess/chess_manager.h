@@ -31,6 +31,7 @@ private:
     char board_str[64 * 4 + 6 * 8]{'a', ' ', 'b', ' ', 'c', ' ', 'd',  ' ', 'e',
                                    ' ', 'f', ' ', 'g', ' ', 'h', '\r', '\n'};
     ChessBoard board;
+    int8_t player_turn;
 };
 
 }  // namespace Chess

@@ -26,6 +26,8 @@ public:
 
     int8_t turn() const;
 
+    uint8_t is_attacked(uint64_t square, int8_t enemy_color) const;
+
     /**
     * @brief Piece bitboards
     */
@@ -41,6 +43,9 @@ public:
     uint64_t b_queens{D8};
     uint64_t w_king{E1};
     uint64_t b_king{E8};
+
+    bool w_castle_kingside{true}, w_castle_queenside{true}, b_castle_kingside,
+        b_castle_queenside{true};
 
     ChessManager& manager;
 };

@@ -112,6 +112,12 @@ int8_t ChessBoard::turn() const
     return manager.turn;
 }
 
+uint8_t ChessBoard::is_attacked(uint64_t square, int8_t enemy_color) const
+{
+    uint8_t ret{0};
+    return ret;
+}
+
 }  // namespace Chess
 
 }  // namespace LBR

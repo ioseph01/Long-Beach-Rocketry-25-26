@@ -4,7 +4,8 @@ namespace LBR
 {
 namespace Chess
 {
-ChessManager::ChessManager() : turn(1), board(ChessBoard(*this))
+ChessManager::ChessManager()
+    : turn(1), player_turn(-1), board(ChessBoard(*this))
 {
 }
 

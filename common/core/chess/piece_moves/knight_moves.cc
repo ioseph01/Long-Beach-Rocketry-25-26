@@ -5,25 +5,7 @@ namespace LBR
 {
 namespace Chess
 {
-void calculate_knight_moves(uint64_t* ret)
-{
-    for (int i = 0; i < 64; i++)
-    {
-        uint64_t sq = 1ULL << i;
-        uint64_t val = 0;
 
-        val |= (sq << 17) & ~A_FILE;
-        val |= (sq << 15) & ~H_FILE;
-        val |= (sq << 10) & ~(A_FILE | B_FILE);
-        val |= (sq << 6) & ~(G_FILE | H_FILE);
-        val |= (sq >> 6) & ~(A_FILE | B_FILE);
-        val |= (sq >> 10) & ~(G_FILE | H_FILE);
-        val |= (sq >> 15) & ~A_FILE;
-        val |= (sq >> 17) & ~H_FILE;
-
-        ret[i] = val;
-    }
-}
 uint64_t knight_destinations(ChessBoard& board, int8_t color, uint8_t offset)
 {
     uint64_t friendlies =

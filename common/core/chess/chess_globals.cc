@@ -130,11 +130,11 @@ uint64_t reverse_bits(uint64_t bits)
     return bits & SET_BITMASK;
 }
 
-uint64_t get_ray_attacks(uint64_t bitboard, uint64_t occupied, uint64_t mask)
+uint64_t get_ray_attacks(uint64_t square, uint64_t occupied, uint64_t mask)
 {
     uint64_t vector_occ = occupied & mask;
-    uint64_t pos_attacks = (vector_occ ^ (vector_occ - bitboard * 2)) & mask;
-    uint64_t rev_piece = reverse_bits(bitboard);
+    uint64_t pos_attacks = (vector_occ ^ (vector_occ - square * 2)) & mask;
+    uint64_t rev_piece = reverse_bits(square);
     uint64_t rev_occupied = reverse_bits(vector_occ);
     uint64_t rev_mask = reverse_bits(mask);
     uint64_t rev_neg_attacks =
@@ -422,6 +422,157 @@ void offset_to_uci(uint8_t offset, char* out)
     {
         out[1] = '8';
     }
+}
+
+/**
+ * @brief Startup code that pre-calculates move masks for pieces
+ */
+
+constexpr std::array<uint64_t, 64> calculate_king_moves(void)
+{
+    std::array<uint64_t, 64> ret{};
+    for (int i = 0; i < 64; i++)
+    {
+        uint64_t square = 1ULL << i;
+        uint64_t val = 0;
+
+        val |= (square << 9) & ~A_FILE;
+        val |= (square << 8);
+        val |= (square << 7) & ~H_FILE;
+        val |= (square << 1) & ~A_FILE;
+        val |= (square >> 1) & ~H_FILE;
+        val |= (square >> 7) & ~A_FILE;
+        val |= (square >> 8);
+        val |= (square >> 9) & ~H_FILE;
+
+        ret[i] = val;
+    }
+    return ret;
+}
+
+constexpr std::array<uint64_t, 64> calculate_knight_moves(void)
+{
+    std::array<uint64_t, 64> ret{};
+    for (int i = 0; i < 64; i++)
+    {
+        uint64_t sq = 1ULL << i;
+        uint64_t val = 0;
+
+        val |= (sq << 17) & ~A_FILE;
+        val |= (sq << 15) & ~H_FILE;
+        val |= (sq << 10) & ~(A_FILE | B_FILE);
+        val |= (sq << 6) & ~(G_FILE | H_FILE);
+        val |= (sq >> 6) & ~(A_FILE | B_FILE);
+        val |= (sq >> 10) & ~(G_FILE | H_FILE);
+        val |= (sq >> 15) & ~A_FILE;
+        val |= (sq >> 17) & ~H_FILE;
+
+        ret[i] = val;
+    }
+    return ret;
+}
+
+constexpr std::array<uint64_t, 64> calculate_bishop_diags(void)
+{
+    std::array<uint64_t, 64> DIAG{};
+    for (int i = 0; i < 64; i++)
+    {
+        uint64_t diag_mask{0};
+        uint64_t square = 1ULL << i;
+        for (int j = 0; j < 8; j++)
+        {
+            uint64_t new_square = square << (9 * j);
+            if (j == 0)
+            {
+                if (H_FILE & new_square || new_square & RANK8)
+                {
+                    break;
+                }
+            }
+            else
+            {
+                diag_mask |= new_square;
+                if (H_FILE & new_square || new_square & RANK8)
+                {
+                    break;
+                }
+            }
+        }
+        for (int j = 0; j < 8; j++)
+        {
+            uint64_t new_square = square >> (9 * j);
+            if (j == 0)
+            {
+                if (A_FILE & new_square || new_square & RANK1)
+                {
+                    break;
+                }
+            }
+            else
+            {
+                diag_mask |= new_square;
+                if (A_FILE & new_square || new_square & RANK1)
+                {
+                    break;
+                }
+            }
+        }
+
+        DIAG[i] = diag_mask;
+    }
+    return DIAG;
+}
+
+constexpr std::array<uint64_t, 64> calculate_bishop_anti_diags(void)
+{
+    std::array<uint64_t, 64> ANTI_DIAG{};
+
+    for (int i = 0; i < 64; i++)
+    {
+        uint64_t anti_diag_mask{0};
+        uint64_t square = 1ULL << i;
+
+        for (int j = 0; j < 8; j++)
+        {
+            uint64_t new_square = square << (7 * j);
+            if (j == 0)
+            {
+                if (A_FILE & new_square || new_square & RANK8)
+                {
+                    break;
+                }
+            }
+            else
+            {
+                anti_diag_mask |= new_square;
+                if (A_FILE & new_square || new_square & RANK8)
+                {
+                    break;
+                }
+            }
+        }
+        for (int j = 0; j < 8; j++)
+        {
+            uint64_t new_square = square >> (7 * j);
+            if (j == 0)
+            {
+                if (H_FILE & new_square || new_square & RANK1)
+                {
+                    break;
+                }
+            }
+            else
+            {
+                anti_diag_mask |= new_square;
+                if (H_FILE & new_square || new_square & RANK1)
+                {
+                    break;
+                }
+            }
+        }
+        ANTI_DIAG[i] = anti_diag_mask;
+    }
+    return ANTI_DIAG;
 }
 
 }  // namespace Chess

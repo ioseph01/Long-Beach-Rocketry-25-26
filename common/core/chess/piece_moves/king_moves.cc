@@ -6,25 +6,6 @@ namespace LBR
 namespace Chess
 {
 
-void calculate_king_moves(uint64_t* ret)
-{
-    for (int i = 0; i < 64; i++)
-    {
-        uint64_t square = 1ULL << i;
-        uint64_t val = 0;
-
-        val |= (square << 9) & ~A_FILE;
-        val |= (square << 8);
-        val |= (square << 7) & ~H_FILE;
-        val |= (square << 1) & ~A_FILE;
-        val |= (square >> 1) & ~H_FILE;
-        val |= (square >> 7) & ~A_FILE;
-        val |= (square >> 8);
-        val |= (square >> 9) & ~H_FILE;
-
-        ret[i] = val;
-    }
-}
 uint64_t king_destinations(ChessBoard& board, int8_t color, int8_t offset)
 {
     uint64_t occupied = board.black_pieces() | board.white_pieces();
